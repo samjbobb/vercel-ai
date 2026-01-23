@@ -148,6 +148,36 @@ describe('groundingMetadataSchema', () => {
     expect(result.success).toBe(true);
   });
 
+  it('validates groundingSupports[] with missing segment', () => {
+    const metadata = {
+      groundingChunks: [
+        {
+          web: {
+            uri: 'https://www.kohler.com/en/products/kitchen-faucets',
+            title: 'K-99267 | Artifacts Bar Sink Faucet - KOHLER',
+          },
+        },
+      ],
+      groundingSupports: [
+        {
+          // Missing `segment`
+          groundingChunkIndices: [0],
+        },
+        {
+          segment: {
+            startIndex: 154,
+            endIndex: 250,
+            text: 'To find the specific warranty terms, you would need to click on this link.',
+          },
+          groundingChunkIndices: [0],
+        },
+      ],
+    };
+
+    const result = groundingMetadataSchema.safeParse(metadata);
+    expect(result.success).toBe(true);
+  });
+
   it('validates groundingChunks[].retrievedContext with fileSearchStore (new format)', () => {
     const metadata = {
       groundingChunks: [
